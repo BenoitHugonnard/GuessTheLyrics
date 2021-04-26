@@ -1,0 +1,142 @@
+{% extends "layouts/layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+<audio id="player" src="http://{{ host }}:5102/data/{{ song }}/song-{{ idx }}.mp3" type="audio/mpeg"></audio>
+<div>
+  <button onclick="document.getElementById('player').play()">
+    <img src="http://icons.iconarchive.com/icons/icons-land/play-stop-pause/48/Play-Normal-icon.png"/>
+  </button>
+
+  <button onclick="document.getElementById('player').pause()">
+    <img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/48/Pause-icon.png"/>
+  </button>
+
+  <button onclick="document.getElementById('player').volume+=0.5">
+    <img src="https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/48/Volume_sound_audio_speaker_music_off_high.png"/>
+  </button>
+
+  <button onclick="document.getElementById('player').volume-=0.5">
+    <img src="https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/48/Volume_down_arrow_download_up.png"/>
+  </button>
+</div>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+<h2 id="level">Level {{ level }}!</h2>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+<div class="rabbit-lyrics" data-media="#player" data-view-mode="mini" style="height: 200px">
+  {{ lyrics }}
+</div>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+<h2 id="placeholder">{{ placeholder }}</h2>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary btn-lg" onclick="return trigger_initials()">Initials</button>
+<button type="button" class="btn btn-primary btn-lg" onclick="reset_song()">Reset</button>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+<!-- FORM -->
+<form id="submitForm" onsubmit="return submit_proposition()">
+  <div class="form-group">
+    <label for="proposition">What is your answer ?</label>
+    <input id="proposition" type="text" class="form-control form-control-lg" required/>
+    <div id="invalid-feedback" class="invalid-feedback" style="display:none"></div>
+  </div>
+  <input type="submit" value="Go!" style="display:none"/>
+</form>
+
+
+<!-- FORM script -->
+<script>
+  function submit_proposition(){
+    let data = new URLSearchParams();
+    data.append("proposition", document.getElementById("proposition").value);
+
+    fetch('/api/submit/ladder/{{ song }}/{{ idx }}', {method: "post", body: data}).then(function (response) {
+      return response.json().then(function (json_data) {
+        document.getElementById("proposition").setAttribute("value", json_data["proposition"])
+        document.getElementById("placeholder").innerHTML = json_data["answer"]
+
+        if (json_data["status"] === "1") {
+          document.getElementById("proposition").setAttribute("class", "form-control is-valid")
+          document.getElementById("invalid-feedback").style.display = 'none';
+          window.location = '/song/ladder/{{ song }}/' + json_data["new_idx"];
+          document.getElementById('player').play()
+        }
+        else {
+          document.getElementById("proposition").setAttribute("class", "form-control is-is-invalid");
+          document.getElementById("invalid-feedback").style.display = 'inline';
+          document.getElementById("invalid-feedback").innerHTML = `Correct answer was "${json_data["answer"]}"`;
+        }
+      });
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+    return false;
+  }
+</script>
+
+<!-- INITIALS script -->
+<script>
+  function trigger_initials(){
+    fetch('/api/initials/ladder/{{ song }}/{{ idx }}').then(function (response) {
+      return response.json().then(function (json_data) {
+        document.getElementById("placeholder").innerHTML = json_data["initials"]
+      });
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+    return false;
+  }
+</script>
+
+<!-- RESET script -->
+<script>
+  function reset_song(){
+    fetch('/api/generate/ladder/{{ song }}').then(function (response) {
+      return response.json().then(function (json_data) {
+        window.location = '/song/ladder/{{ song }}/0';
+        document.getElementById('player').play()
+      });
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+    return false;
+  }
+</script>
+
+
+{% endblock %}

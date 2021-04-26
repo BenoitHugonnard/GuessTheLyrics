@@ -1,0 +1,46 @@
+{% extends "layouts/layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+<audio id="player" src="http://{{ host }}:5102/raw/{{ song }}/song.mp3" type="audio/mpeg" controls></audio>
+<div>
+  <button onclick="document.getElementById('player').play()">
+    <img src="http://icons.iconarchive.com/icons/icons-land/play-stop-pause/48/Play-Normal-icon.png"/>
+  </button>
+
+  <button onclick="document.getElementById('player').pause()">
+    <img src="http://icons.iconarchive.com/icons/custom-icon-design/pretty-office-8/48/Pause-icon.png"/>
+  </button>
+
+  <button onclick="document.getElementById('player').volume+=0.5">
+    <img src="https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/48/Volume_sound_audio_speaker_music_off_high.png"/>
+  </button>
+
+  <button onclick="document.getElementById('player').volume-=0.5">
+    <img src="https://cdn2.iconfinder.com/data/icons/perfect-flat-icons-2/48/Volume_down_arrow_download_up.png"/>
+  </button>
+
+
+</div>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+<div class="rabbit-lyrics" data-media="#player" data-view-mode="default">
+  {{ lyrics }}
+</div>
+
+<div class="row voffset4">
+  <div class="col-lg-12">
+    <p></p>
+  </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  guess_the_words:
+    build:
+        context: .
+        dockerfile: Dockerfile
+    container_name: guess_the_words
+    ports:
+      - "5100:5000"
+      - "5102:5002"
+    volumes:
+        - .:/usr/src/app
+    environment:
+      MAX_LEVEL: 5
+      LEVEL_0_WORDS: 3,4
+      LEVEL_1_WORDS: 4,6
+      LEVEL_2_WORDS: 6,8
+      LEVEL_3_WORDS: 8,10
+      LEVEL_4_WORDS: 10,12
+      SPLIT_BEGIN_SAFETY: 5
+      SPLIT_END_SAFETY: 5
+      BREAK_SAFETY: 2
+
+    env_file:
+      - ./docker.env
+    command: python app.py

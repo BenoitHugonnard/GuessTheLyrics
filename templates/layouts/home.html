@@ -1,0 +1,101 @@
+{% extends "layouts/layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+<div class="home">
+  <div class="row no-gutters justify-content-center">
+    <h1>Guess the Words !</h1>
+  </div>
+
+  <button id="mode_classic" type="button" class="btn btn-primary btn-lg" onclick="return choose_classic()" disabled>Classic</button>
+  <button id="mode_ladder" type="button" class="btn btn-primary btn-lg" onclick="return choose_ladder()">Ladder</button>
+  <button id="mode_karaoke" type="button" class="btn btn-primary btn-lg" onclick="return choose_karaoke()">Karaoke</button>
+
+  <div class="row no-gutters justify-content-center">
+    <div id="songs" class="btn-group" role="group"></div>
+  </div>
+</div>
+
+<script>
+  function refresh_page(mode){
+    fetch('/api/songs').then(function (response) {
+      return response.json().then(function (json_data) {
+        let result = `<div class="row justify-content-between justify-content-around">`
+        for (let category in json_data) {
+          result += `
+            <div class="col">
+              <p>
+                <button class="btn btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${category}" aria-expanded="false" aria-controls="collapse${category}">
+                  <img src="http://{{ host }}:5102/images/${category}.png" width="300">
+                </button>
+              </p>
+              <div class="collapse multi-collapse" id="collapse${category}">
+                <div class="card card-body">
+                  <div id="list_songs_${category}" class="list-group">
+          `
+
+          for (let song_idx in json_data[category]) {
+            let song = json_data[category][song_idx]
+            let display_name = song["display_name"]
+            let song_name = song["song_name"]
+            if (mode === "classic") {
+              result += `<a href="/song/classic/${song_name}" class="list-group-item list-group-item-action">${display_name}</a>`
+            }
+            else if (mode === "karaoke") {
+              result += `<a href="/song/karaoke/${song_name}" class="list-group-item list-group-item-action">${display_name}</a>`
+            }
+            else {
+              result += `<a href="/song/ladder/${song_name}/0" class="list-group-item list-group-item-action">${display_name}</a>`
+            }
+          }
+          result += "</div></div></div></div>"
+        }
+        document.getElementById("songs").innerHTML = result + "</div>"
+      });
+    })
+    .catch(function (error) {
+      console.log(error)
+    })
+  }
+
+  refresh_page("classic")
+
+  function choose_classic(){
+    document.getElementById("mode_classic").setAttribute("disabled", "disabled")
+    document.getElementById("mode_ladder").removeAttribute("disabled")
+    document.getElementById("mode_karaoke").removeAttribute("disabled")
+    refresh_page("classic")
+    return false
+  }
+
+  function choose_ladder(){
+    document.getElementById("mode_ladder").setAttribute("disabled", "disabled")
+    document.getElementById("mode_classic").removeAttribute("disabled")
+    document.getElementById("mode_karaoke").removeAttribute("disabled")
+    refresh_page("ladder")
+    return false
+  }
+
+  function choose_karaoke(){
+    document.getElementById("mode_karaoke").setAttribute("disabled", "disabled")
+    document.getElementById("mode_classic").removeAttribute("disabled")
+    document.getElementById("mode_ladder").removeAttribute("disabled")
+    refresh_page("karaoke")
+    return false
+  }
+
+  function get_mode(){
+    if ("disabled" in document.getElementById("mode_classic")) {
+      return "classic"
+    }
+    else if ("disabled" in document.getElementById("mode_ladder")) {
+      return "ladder"
+    }
+    return "karaoke"
+  }
+</script>
+
+{% endblock %}

@@ -1,0 +1,149 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #444;
+  height: 90px;
+}
+/*
+ * Formatting the header area
+ */
+header {
+  background-color: #DFB887;
+  height: 35px;
+  width: 100%;
+  opacity: .9;
+  margin-bottom: 10px;
+}
+header h1.logo {
+  margin: 0;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  float: left;
+}
+/*
+ * Centering the body content
+ */
+.container {
+  width: 3000px;
+  margin: 0 auto;
+}
+div.home {
+  padding: 10px 0 30px 0;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+div.about {
+  padding: 10px 0 30px 0;
+  -webkit-border-radius: 6px;
+     -moz-border-radius: 6px;
+          border-radius: 6px;
+}
+
+h2 {
+  font-size: 4em;
+  margin-top: 40px;
+  text-align: center;
+  letter-spacing: -2px;
+}
+h3 {
+  font-size: 1.7em;
+  font-weight: 100;
+  margin-top: 30px;
+  text-align: center;
+  letter-spacing: -1px;
+  color: #999;
+}
+.menu {
+  float: right;
+  margin-top: 8px;
+}
+.menu li {
+  display: inline;
+}
+.menu li + li {
+  margin-left: 35px;
+}
+.menu li a {
+  color: #444;
+  text-decoration: none;
+}
+
+.voffset  { margin-top: 2px; }
+.voffset1 { margin-top: 5px; }
+.voffset2 { margin-top: 10px; }
+.voffset3 { margin-top: 15px; }
+.voffset4 { margin-top: 30px; }
+.voffset5 { margin-top: 40px; }
+.voffset6 { margin-top: 60px; }
+.voffset7 { margin-top: 80px; }
+.voffset8 { margin-top: 100px; }
+.voffset9 { margin-top: 150px; }
+
+/* RABBIT LYRICS */
+
+/* Framed view mode (default) */
+
+.rabbit-lyrics {
+  position: relative; /* Must be relative, otherwise cannot calculate offset */
+  padding: 5em 0;
+  height: 50em;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  background-color: #ffffff;
+  border: 1px solid #dddddd;
+}
+
+.rabbit-lyrics--center {
+  text-align: center;
+}
+
+.rabbit-lyrics--left {
+  text-align: left;
+}
+
+.rabbit-lyrics--right {
+  text-align: right;
+}
+
+.rabbit-lyrics__line {
+  line-height: 1.5em;
+  min-height: 1.5em;
+  padding: 0 1em;
+
+  font-size: 5em;
+}
+
+.rabbit-lyrics__line--active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.rabbit-lyrics__inline--active {
+  color: #04a8a8;
+}
+
+/* Mini view mode */
+
+.rabbit-lyrics--mini {
+  height: 1.5em;
+  overflow-y: hidden;
+}
+
+.rabbit-lyrics--mini .rabbit-lyrics__line {
+  display: none;
+}
+
+.rabbit-lyrics--mini .rabbit-lyrics__line--active {
+  display: block;
+  background: transparent;
+}
+
+/* Full view mode, no scroll bar */
+
+.rabbit-lyrics--full {
+  height: auto;
+  overflow-y: initial;
+}
