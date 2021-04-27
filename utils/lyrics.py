@@ -76,7 +76,9 @@ class Lyric:
         return " ".join(response)
 
     def generate_lyrics(self, split_idx=None):
-        split_idx = split_idx if split_idx is not None else len(self.words_idx)
+        if split_idx is None:
+            return f"{self.ts} {self.lyric}"
+
         response = []
         for idx, val in enumerate(self.split_components):
             if idx in self.words_idx:
@@ -149,19 +151,25 @@ class Lyrics:
             prev_lyric = lyrics[idx - 1]
 
             if len(cur_lyric.words_idx) >= nb_words:
-                possibility = [
-                    (cur_lyric.idx, cur_lyric.words_idx[-nb_words:])]
-                possibilities.append(possibility)
+                if all(cur_lyric.lyric not in x.lyric for x in self.lyrics[:cur_lyric.idx]):
+                    possibility = [
+                        (cur_lyric.idx, cur_lyric.words_idx[-nb_words:])]
+                    possibilities.append(possibility)
 
             elif len(cur_lyric.words_idx) + len(
                     prev_lyric.words_idx) >= nb_words:
-                final_size = len(cur_lyric.words_idx)
-                possibility = [
-                    (prev_lyric.idx,
-                     prev_lyric.words_idx[-(nb_words - final_size):]),
-                    (cur_lyric.idx, cur_lyric.words_idx)
-                ]
-                possibilities.append(possibility)
+                if all(cur_lyric.lyric not in x.lyric for x in
+                       self.lyrics[:cur_lyric.idx])\
+                        and all(prev_lyric.lyric not in x.lyric for x in
+                       self.lyrics[:prev_lyric.idx]):
+
+                    final_size = len(cur_lyric.words_idx)
+                    possibility = [
+                        (prev_lyric.idx,
+                         prev_lyric.words_idx[-(nb_words - final_size):]),
+                        (cur_lyric.idx, cur_lyric.words_idx)
+                    ]
+                    possibilities.append(possibility)
         choice = random.choice(possibilities)
         print("CHOICE", choice)
         return choice

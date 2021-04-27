@@ -18,9 +18,9 @@ services:
       LEVEL_2_WORDS: 6,8
       LEVEL_3_WORDS: 8,10
       LEVEL_4_WORDS: 10,12
-      SPLIT_BEGIN_SAFETY: 5
-      SPLIT_END_SAFETY: 5
-      BREAK_SAFETY: 2
+      SPLIT_BEGIN_SAFETY: 2
+      SPLIT_END_SAFETY: 2
+      BREAK_SAFETY: 0
 
     env_file:
       - ./docker.env
