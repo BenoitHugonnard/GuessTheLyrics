@@ -10,8 +10,8 @@
     <h1>Guess the Words !</h1>
   </div>
 
-  <button id="mode_classic" type="button" class="btn btn-primary btn-lg" onclick="return choose_classic()" disabled>Classic</button>
-  <button id="mode_ladder" type="button" class="btn btn-primary btn-lg" onclick="return choose_ladder()">Ladder</button>
+  <button id="mode_classic" type="button" class="btn btn-primary btn-lg" onclick="return choose_classic()">Classic</button>
+  <button id="mode_ladder" type="button" class="btn btn-primary btn-lg" onclick="return choose_ladder()" disabled>Ladder</button>
   <button id="mode_karaoke" type="button" class="btn btn-primary btn-lg" onclick="return choose_karaoke()">Karaoke</button>
 
   <div class="row no-gutters justify-content-center">
@@ -21,7 +21,7 @@
 
 <script>
   function refresh_page(mode){
-    fetch('/api/songs').then(function (response) {
+    fetch('/api/songs2').then(function (response) {
       return response.json().then(function (json_data) {
         let result = `<div class="row justify-content-between justify-content-around">`
         for (let category in json_data) {
@@ -61,7 +61,7 @@
     })
   }
 
-  refresh_page("classic")
+  refresh_page("ladder")
 
   function choose_classic(){
     document.getElementById("mode_classic").setAttribute("disabled", "disabled")

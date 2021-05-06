@@ -155,6 +155,8 @@ class Lyrics:
                     possibility = [
                         (cur_lyric.idx, cur_lyric.words_idx[-nb_words:])]
                     possibilities.append(possibility)
+                else:
+                    print(cur_lyric.lyric, "already said")
 
             elif len(cur_lyric.words_idx) + len(
                     prev_lyric.words_idx) >= nb_words:
@@ -170,6 +172,12 @@ class Lyrics:
                         (cur_lyric.idx, cur_lyric.words_idx)
                     ]
                     possibilities.append(possibility)
+                else:
+                    print(cur_lyric.lyric, prev_lyric.lyric, "already said")
+            else:
+                print(cur_lyric.lyric, prev_lyric.lyric, "not good")
+        if not possibilities:
+            return []
         choice = random.choice(possibilities)
         print("CHOICE", choice)
         return choice
@@ -243,23 +251,26 @@ class Lyrics:
             print("BREAK IDX", break_idx)
             nb_words = mapping_breaks[break_idx]
             choice = self._choose_possibility(lyrics, nb_words)
-            prev_idx = int(break_idx) - 1 if int(break_idx) else None
-            prev_break_idx = result.get(str(prev_idx), {}).get("break_idx", 0)
-            lyrics_to_show = self._generate_lyrics(choice, int(break_idx),
-                                                   prev_idx=prev_break_idx)
-            placeholder = self._generate_placeholder(choice)
-            initials = self._generate_initials(choice)
-            answer = self._generate_answer(choice)
+            if choice:
+                prev_idx = int(break_idx) - 1 if int(break_idx) else None
+                prev_break_idx = result.get(str(prev_idx), {}).get("break_idx", 0)
+                lyrics_to_show = self._generate_lyrics(choice, int(break_idx),
+                                                       prev_idx=prev_break_idx)
+                placeholder = self._generate_placeholder(choice)
+                initials = self._generate_initials(choice)
+                answer = self._generate_answer(choice)
 
-            result[break_idx] = {
-                "break_idx": choice[0][0],
-                "previous_break_timestamp": result.get(str(prev_idx), {}).get(
-                    "break_timestamp", 0),
-                "break_timestamp": self.lyrics[choice[0][0]].ms,
-                "lyrics_to_show": lyrics_to_show,
-                "placeholder": placeholder,
-                "initials": initials,
-                "level": str(break_idx),
-                "answer": answer
-            }
+                result[break_idx] = {
+                    "break_idx": choice[0][0],
+                    "previous_break_timestamp": result.get(str(prev_idx), {}).get(
+                        "break_timestamp", 0),
+                    "break_timestamp": self.lyrics[choice[0][0]].ms,
+                    "lyrics_to_show": lyrics_to_show,
+                    "placeholder": placeholder,
+                    "initials": initials,
+                    "level": str(break_idx),
+                    "answer": answer
+                }
+            else:
+                break
         return result

@@ -49,6 +49,7 @@
 </div>
 
 <h2 id="placeholder">{{ placeholder }}</h2>
+<h2 id="placeholder2">{{ placeholder }}</h2>
 
 <div class="row voffset4">
   <div class="col-lg-12">
@@ -66,7 +67,7 @@
 </div>
 
 <!-- FORM -->
-<form id="submitForm" onsubmit="return submit_proposition()">
+<form id="submitForm" onsubmit="return submit_proposition()" onkeyup="return user_is_typing()">
   <div class="form-group">
     <label for="proposition">What is your answer ?</label>
     <input id="proposition" type="text" class="form-control form-control-lg" required/>
@@ -74,6 +75,24 @@
   </div>
   <input type="submit" value="Go!" style="display:none"/>
 </form>
+
+<script>
+  function user_is_typing() {
+    let proposition = document.getElementById("proposition").value
+    if (proposition === "") {
+      document.getElementById("placeholder2").innerHTML = "{{ placeholder }}"
+    }
+    else {
+      let nb_words = "{{ placeholder }}".split(" ").length
+      let nb_words_proposition = proposition.split(" ").length
+      console.log(nb_words)
+      console.log(nb_words_proposition)
+      let result = proposition + " ___ ".repeat(nb_words - nb_words_proposition)
+      document.getElementById("placeholder2").innerHTML = result
+    }
+  }
+</script>
+
 
 
 <!-- FORM script -->

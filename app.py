@@ -9,6 +9,9 @@ from utils.settings import settings
 import re
 import random
 import copy
+import urllib.parse
+import base64
+
 
 app = Flask(__name__)
 app._static_folder = os.path.abspath("templates/static/")
@@ -112,6 +115,32 @@ def api_songs():
                 "song_name": song_name
             }
             songs_by_cat[category] = songs_by_cat.get(category, []) + [song]
+
+    for category in songs_by_cat:
+        random_song = copy.deepcopy(random.choice(songs_by_cat[category]))
+        random_song["display_name"] = "Random"
+        songs_by_cat[category] = [random_song] + songs_by_cat[category]
+
+    return songs_by_cat
+
+
+@app.route('/api/songs2', methods=['GET'])
+def api_songs2():
+    raw_path = current_dir / 'data' / 'raw2'
+    songs_by_cat = {}
+    for file in raw_path.glob("**/*.mp3"):
+        category = file.parent.parent.name
+        author = file.parent.name
+        song_name = file.stem
+        full_song = f"{category}/{author}/{song_name}"
+        message_bytes = full_song.encode('utf-8')
+        base64_bytes = base64.b64encode(message_bytes)
+        song = {
+            "display_name": f"{author} - {song_name}",
+            "song_name": base64_bytes.decode("utf-8")
+        }
+        print(base64_bytes.decode("utf-8"))
+        songs_by_cat[category] = songs_by_cat.get(category, []) + [song]
 
     for category in songs_by_cat:
         random_song = copy.deepcopy(random.choice(songs_by_cat[category]))
